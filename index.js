@@ -64,22 +64,27 @@ res.json(movies);
 //DELETE Specific MOVIE Based on ID
 
 app.delete('/api/movies/:id', (req, res) => {
+    const idToDelete = parseInt(req.params.id);
+  
+    // Find the index of the movie with the provided ID
+    const indexToDelete = movies.findIndex(movie => movie.id === idToDelete);
+  
+    if (indexToDelete !== -1) {
+      // Movie found, delete it
+      movies.splice(indexToDelete, 1);
+      res.json({ msg: 'Deleted', movies: movies });
+    } else {
+      // Movie not found
+      res.status(404).json({ msg: `No movie with the id of ${idToDelete}` });
+    }
+  });
+  
 
-const found = movies.some(idFilter(req));
 
-if (found) {
-res.json({msg:'Deleted',
-members:movies.filter(
-member=>member.id!==parseInt(req.params.id))})
-} else {
-res.status(400).json({ msg: `No movies with the id of ${req.params.id}` });
-}
-
-});
 
 //UPDATE Specific Movie Based on ID
 
-app.put('/api/movies:id',(req,res)=>
+app.put('/api/movies/:id',(req,res)=>
 
 {
 const found = movies.some(member=>member.id===parseInt(req.params.id));
